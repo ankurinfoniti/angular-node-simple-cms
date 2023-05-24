@@ -20,5 +20,9 @@ import { PostListComponent } from './posts/post-list/post-list.component';
   ],
 })
 export class AppComponent {
-  title = 'Angular Standalone Practice';
+  storedPosts: Array<{ title: string; content: string }> = [];
+
+  onPostAdded(post: { title: string; content: string }) {
+    this.storedPosts.push(post);
+  }
 }

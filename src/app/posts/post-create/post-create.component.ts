@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -20,10 +20,16 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./post-create.component.css'],
 })
 export class PostCreateComponent {
-  currentValue = '';
-  newPost = 'NO CONTENT';
+  title = '';
+  content = '';
+  @Output() postCreated = new EventEmitter();
 
   onAddPost() {
-    this.newPost = this.currentValue;
+    const post = {
+      title: this.title,
+      content: this.content,
+    };
+
+    this.postCreated.emit(post);
   }
 }

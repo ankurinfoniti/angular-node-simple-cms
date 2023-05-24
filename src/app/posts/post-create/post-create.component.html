@@ -1,7 +1,10 @@
 <mat-card>
   <mat-card-content>
     <mat-form-field>
-      <textarea matInput [(ngModel)]="currentValue"></textarea>
+      <input type="text" matInput [(ngModel)]="title" />
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput [(ngModel)]="content"></textarea>
     </mat-form-field>
   </mat-card-content>
 

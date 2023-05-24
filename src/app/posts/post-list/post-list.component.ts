@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -11,5 +11,5 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent {
-  posts: Array<{ title: string; content: string }> = [];
+  @Input() posts: Array<{ title: string; content: string }> = [];
 }
