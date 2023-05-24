@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { MatExpansionModule } from '@angular/material/expansion';
 
+import { Post } from '../post.model';
+
 @Component({
   selector: 'app-post-list',
   standalone: true,
@@ -11,5 +13,5 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent {
-  @Input() posts: Array<{ title: string; content: string }> = [];
+  @Input() posts: Post[] = [];
 }
