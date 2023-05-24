@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
@@ -10,7 +11,7 @@ import { PostsService } from '../posts.service';
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule, MatExpansionModule],
+  imports: [CommonModule, MatExpansionModule, MatButtonModule],
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css'],
 })
