@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 
 import { environment as env } from 'src/environments/environment';
 import { Post } from './post.model';
@@ -15,9 +15,20 @@ export class PostsService {
 
   getPosts() {
     this.httpClient
-      .get<{ message: string; posts: Post[] }>(`${env.BASE_URL}/posts`)
-      .subscribe((data) => {
-        this.posts = data.posts;
+      .get<{ message: string; posts: any }>(`${env.BASE_URL}/posts`)
+      .pipe(
+        map((postData) => {
+          return postData.posts.map((post: any) => {
+            return {
+              title: post.title,
+              content: post.content,
+              id: post._id,
+            };
+          });
+        })
+      )
+      .subscribe((posts) => {
+        this.posts = posts;
         this.postsUpdated.next([...this.posts]);
       });
   }
