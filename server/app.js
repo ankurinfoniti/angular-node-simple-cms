@@ -1,6 +1,9 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const port = process.env.port || 3000;
+
+app.use(cors());
 
 app.get("/api/posts", (req, res) => {
   const posts = [
@@ -18,7 +21,7 @@ app.get("/api/posts", (req, res) => {
 
   res.json({
     message: "Posts fetched successfully!",
-    data: posts,
+    posts: posts,
   });
 });
 
