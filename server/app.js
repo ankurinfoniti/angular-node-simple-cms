@@ -13,19 +13,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.get("/api/posts", (req, res) => {
-  const posts = [
-    {
-      id: "ajflkdjglfkjfs",
-      title: "First One",
-      content: "This is first one",
-    },
-    {
-      id: "aalkjrfn",
-      title: "Second One",
-      content: "This is second one",
-    },
-  ];
+app.get("/api/posts", async (req, res) => {
+  const posts = await Post.find({});
 
   res.json({
     message: "Posts fetched successfully!",
