@@ -1,7 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
+
+const Post = require("./models/post");
+
 const app = express();
 const port = process.env.port || 3000;
+
+mongoose.connect("mongodb://localhost:27017/simple-cms");
 
 app.use(cors());
 app.use(express.json());
@@ -28,7 +34,10 @@ app.get("/api/posts", (req, res) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
   console.log(post);
   res.status(201).json({ message: "Post added successfully" });
 });
