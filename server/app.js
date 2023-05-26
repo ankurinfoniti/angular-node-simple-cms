@@ -33,12 +33,13 @@ app.get("/api/posts", (req, res) => {
   });
 });
 
-app.post("/api/posts", (req, res, next) => {
+app.post("/api/posts", async (req, res, next) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
   });
-  console.log(post);
+
+  await post.save();
   res.status(201).json({ message: "Post added successfully" });
 });
 
