@@ -42,9 +42,16 @@ export class PostsService {
     this.httpClient
       .post<{ message: string }>(`${env.BASE_URL}/posts`, post)
       .subscribe((responsDate) => {
-        console.log(responsDate);
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
       });
+  }
+
+  deletePost(postId: string) {
+    this.httpClient.delete(`${env.BASE_URL}/posts/${postId}`).subscribe(() => {
+      const updatedPosts = this.posts.filter((post) => post.id !== postId);
+      this.posts = updatedPosts;
+      this.postsUpdated.next([...this.posts]);
+    });
   }
 }

@@ -29,7 +29,12 @@ app.post("/api/posts", async (req, res, next) => {
   });
 
   await post.save();
-  res.status(201).json({ message: "Post added successfully" });
+  res.status(201).json({ message: "Post added successfully!" });
+});
+
+app.delete("/api/posts/:id", async (req, res, next) => {
+  await Post.deleteOne({ _id: req.params.id });
+  res.json({ message: "Post deleted!" });
 });
 
 app.listen(port, () => {
