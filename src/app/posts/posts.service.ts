@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 
+import { environment as env } from 'src/environments/environment';
 import { Post } from './post.model';
 
 @Injectable({
@@ -14,9 +15,7 @@ export class PostsService {
 
   getPosts() {
     this.httpClient
-      .get<{ message: string; posts: Post[] }>(
-        'http://localhost:3000/api/posts'
-      )
+      .get<{ message: string; posts: Post[] }>(`${env.BASE_URL}/posts`)
       .subscribe((data) => {
         this.posts = data.posts;
         this.postsUpdated.next([...this.posts]);
@@ -30,7 +29,7 @@ export class PostsService {
   addPost(title: string, content: string) {
     const post: Post = { id: 'aaaaa', title, content };
     this.httpClient
-      .post<{ message: string }>('http://localhost:3000/api/posts', post)
+      .post<{ message: string }>(`${env.BASE_URL}/posts`, post)
       .subscribe((responsDate) => {
         console.log(responsDate);
         this.posts.push(post);
