@@ -28,8 +28,10 @@ app.post("/api/posts", async (req, res, next) => {
     content: req.body.content,
   });
 
-  await post.save();
-  res.status(201).json({ message: "Post added successfully!" });
+  const addedPost = await post.save();
+  res
+    .status(201)
+    .json({ message: "Post added successfully!", postId: addedPost._id });
 });
 
 app.delete("/api/posts/:id", async (req, res, next) => {
