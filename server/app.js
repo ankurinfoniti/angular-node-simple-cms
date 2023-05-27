@@ -22,6 +22,12 @@ app.get("/api/posts", async (req, res) => {
   });
 });
 
+app.get("/api/posts/:id", async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  res.json(post);
+});
+
 app.post("/api/posts", async (req, res, next) => {
   const post = new Post({
     title: req.body.title,
@@ -32,6 +38,17 @@ app.post("/api/posts", async (req, res, next) => {
   res
     .status(201)
     .json({ message: "Post added successfully!", postId: addedPost._id });
+});
+
+app.put("/api/posts/:id", async (req, res, next) => {
+  await Post.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      title: req.body.title,
+      content: req.body.content,
+    }
+  );
+  res.json({ message: "Update successfully!" });
 });
 
 app.delete("/api/posts/:id", async (req, res, next) => {

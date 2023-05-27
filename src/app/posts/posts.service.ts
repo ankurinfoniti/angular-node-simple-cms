@@ -37,15 +37,23 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
+  getPost(id: string) {
+    return this.httpClient.get<{ _id: string; title: string; content: string }>(
+      `${env.BASE_URL}/posts/${id}`
+    );
+  }
+
   addPost(title: string, content: string) {
-    const post: Post = { id: 'aaaaa', title, content };
-    this.httpClient
-      .post<{ message: string; postId: string }>(`${env.BASE_URL}/posts`, post)
-      .subscribe((responsDate) => {
-        post.id = responsDate.postId;
-        this.posts.push(post);
-        this.postsUpdated.next([...this.posts]);
-      });
+    const post: Post = { id: '', title, content };
+    return this.httpClient.post<{ message: string; postId: string }>(
+      `${env.BASE_URL}/posts`,
+      post
+    );
+  }
+
+  updatePost(id: string, title: string, content: string) {
+    const post: Post = { id, title, content };
+    return this.httpClient.put(`${env.BASE_URL}/posts/${id}`, post);
   }
 
   deletePost(postId: string) {
