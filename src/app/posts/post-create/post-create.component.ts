@@ -11,6 +11,7 @@ import {
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
@@ -25,6 +26,7 @@ import { Post } from '../post.model';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css'],
@@ -34,6 +36,7 @@ export class PostCreateComponent implements OnInit {
   content = '';
   post!: Post;
   mode = 'create';
+  isLoading = false;
   private postId: string = '';
 
   postsService = inject(PostsService);
@@ -45,7 +48,9 @@ export class PostCreateComponent implements OnInit {
       if (paramMap.get('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId')!;
+        this.isLoading = true;
         this.postsService.getPost(this.postId).subscribe((post) => {
+          this.isLoading = false;
           this.post = {
             id: 'post._id',
             title: post.title,
@@ -62,7 +67,7 @@ export class PostCreateComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-
+    this.isLoading = true;
     if (this.mode === 'create') {
       this.postsService
         .addPost(form.value.title, form.value.content)
