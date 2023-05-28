@@ -18,6 +18,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { mimeType } from './mime-type.validator';
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
 
@@ -56,7 +57,10 @@ export class PostCreateComponent implements OnInit {
       content: new FormControl(null, {
         validators: [Validators.required],
       }),
-      image: new FormControl(null, { validators: [Validators.required] }),
+      image: new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [mimeType],
+      }),
     });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
