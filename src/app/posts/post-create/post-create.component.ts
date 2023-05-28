@@ -81,6 +81,17 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
+  onImagePicked(event: Event) {
+    let files = (event.target as HTMLInputElement).files;
+    if (files) {
+      let file = files[0];
+      this.form.patchValue({ image: file });
+      this.form.get('image')?.updateValueAndValidity();
+      console.log(file);
+      console.log(this.form);
+    }
+  }
+
   onSavePost() {
     if (this.form.invalid) {
       return;
