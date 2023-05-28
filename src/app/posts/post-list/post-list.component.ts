@@ -7,6 +7,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { environment as env } from 'src/environments/environment';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 
@@ -24,6 +25,7 @@ import { PostsService } from '../posts.service';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent implements OnInit, OnDestroy {
+  apiUrl = `${env.IMAGE_URL}`;
   posts: Post[] = [];
   isLoading = false;
   private postsSub!: Subscription;
