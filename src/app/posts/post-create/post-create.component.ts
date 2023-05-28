@@ -71,14 +71,15 @@ export class PostCreateComponent implements OnInit {
         this.postsService.getPost(this.postId).subscribe((post) => {
           this.isLoading = false;
           this.post = {
-            id: '',
+            id: post._id,
             title: post.title,
             content: post.content,
-            imagePath: '',
+            imagePath: post.imagePath,
           };
           this.form.setValue({
             title: this.post.title,
             content: this.post.content,
+            image: this.post.imagePath,
           });
         });
       } else {
@@ -119,7 +120,12 @@ export class PostCreateComponent implements OnInit {
         });
     } else {
       this.postsService
-        .updatePost(this.postId, this.form.value.title, this.form.value.content)
+        .updatePost(
+          this.postId,
+          this.form.value.title,
+          this.form.value.content,
+          this.form.value.image
+        )
         .subscribe((response) => {
           this.router.navigate(['/']);
         });

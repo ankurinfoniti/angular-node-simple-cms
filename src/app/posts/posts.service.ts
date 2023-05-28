@@ -39,9 +39,12 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.httpClient.get<{ _id: string; title: string; content: string }>(
-      `${env.BASE_URL}/posts/${id}`
-    );
+    return this.httpClient.get<{
+      _id: string;
+      title: string;
+      content: string;
+      imagePath: string;
+    }>(`${env.BASE_URL}/posts/${id}`);
   }
 
   addPost(title: string, content: string, image: File) {
@@ -56,9 +59,20 @@ export class PostsService {
     );
   }
 
-  updatePost(id: string, title: string, content: string) {
-    const post: Post = { id, title, content, imagePath: '' };
-    return this.httpClient.put(`${env.BASE_URL}/posts/${id}`, post);
+  updatePost(id: string, title: string, content: string, image: File | string) {
+    let postData: Post | FormData;
+
+    if (typeof image === 'object') {
+      postData = new FormData();
+
+      postData.append('title', title);
+      postData.append('content', content);
+      postData.append('image', image, title);
+    } else {
+      postData = { id, title, content, imagePath: image as string };
+    }
+
+    return this.httpClient.put(`${env.BASE_URL}/posts/${id}`, postData);
   }
 
   deletePost(postId: string) {

@@ -60,16 +60,27 @@ router.post(
   }
 );
 
-router.put("/:id", async (req, res, next) => {
-  await Post.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      title: req.body.title,
-      content: req.body.content,
+router.put(
+  "/:id",
+  multer({ storage: storage }).single("image"),
+  async (req, res, next) => {
+    let imagePath = req.body.image;
+
+    if (req.file) {
+      imagePath = "images/" + req.file.filename;
     }
-  );
-  res.json({ message: "Update successfully!" });
-});
+
+    await Post.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        title: req.body.title,
+        content: req.body.content,
+        imagePath: imagePath,
+      }
+    );
+    res.json({ message: "Update successfully!" });
+  }
+);
 
 router.delete("/:id", async (req, res, next) => {
   await Post.deleteOne({ _id: req.params.id });
