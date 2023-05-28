@@ -23,6 +23,7 @@ export class PostsService {
               title: post.title,
               content: post.content,
               id: post._id,
+              imagePath: post.imagePath,
             };
           });
         })
@@ -43,16 +44,20 @@ export class PostsService {
     );
   }
 
-  addPost(title: string, content: string) {
-    const post: Post = { id: '', title, content };
+  addPost(title: string, content: string, image: File) {
+    const postData = new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image, title);
+
     return this.httpClient.post<{ message: string; postId: string }>(
       `${env.BASE_URL}/posts`,
-      post
+      postData
     );
   }
 
   updatePost(id: string, title: string, content: string) {
-    const post: Post = { id, title, content };
+    const post: Post = { id, title, content, imagePath: '' };
     return this.httpClient.put(`${env.BASE_URL}/posts/${id}`, post);
   }
 
