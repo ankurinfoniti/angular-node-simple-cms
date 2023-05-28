@@ -1,6 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   ActivatedRoute,
   ParamMap,
@@ -21,7 +26,7 @@ import { Post } from '../post.model';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     MatInputModule,
     MatCardModule,
@@ -32,11 +37,10 @@ import { Post } from '../post.model';
   styleUrls: ['./post-create.component.css'],
 })
 export class PostCreateComponent implements OnInit {
-  title = '';
-  content = '';
   post!: Post;
   mode = 'create';
   isLoading = false;
+  form!: FormGroup;
   private postId: string = '';
 
   postsService = inject(PostsService);
@@ -44,6 +48,16 @@ export class PostCreateComponent implements OnInit {
   router = inject(Router);
 
   ngOnInit() {
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)],
+      }),
+      content: new FormControl(null, {
+        validators: [Validators.required],
+      }),
+      image: new FormControl(null, { validators: [Validators.required] }),
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.get('postId')) {
         this.mode = 'edit';
@@ -52,10 +66,14 @@ export class PostCreateComponent implements OnInit {
         this.postsService.getPost(this.postId).subscribe((post) => {
           this.isLoading = false;
           this.post = {
-            id: 'post._id',
+            id: '',
             title: post.title,
             content: post.content,
           };
+          this.form.setValue({
+            title: this.post.title,
+            content: this.post.content,
+          });
         });
       } else {
         this.mode = 'create';
@@ -63,25 +81,25 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onSavePost(form: NgForm) {
-    if (form.invalid) {
+  onSavePost() {
+    if (this.form.invalid) {
       return;
     }
     this.isLoading = true;
     if (this.mode === 'create') {
       this.postsService
-        .addPost(form.value.title, form.value.content)
+        .addPost(this.form.value.title, this.form.value.content)
         .subscribe((response) => {
           this.router.navigate(['/']);
         });
     } else {
       this.postsService
-        .updatePost(this.postId, form.value.title, form.value.content)
+        .updatePost(this.postId, this.form.value.title, this.form.value.content)
         .subscribe((response) => {
           this.router.navigate(['/']);
         });
     }
 
-    form.resetForm();
+    this.form.reset();
   }
 }
