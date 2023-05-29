@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const postsRoutes = require("./routes/posts");
+const userRoutes = require("./routes/user");
 
 const app = express();
 const port = process.env.port || 3000;
@@ -15,6 +16,7 @@ app.use(express.urlencoded());
 app.use(express.static("public"));
 
 app.use("/api/posts", postsRoutes);
+app.use("api/user", userRoutes);
 
 app.listen(port, () => {
   console.log(`server is listening on port ${port}`);
