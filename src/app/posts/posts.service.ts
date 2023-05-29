@@ -10,27 +10,37 @@ import { Post } from './post.model';
 })
 export class PostsService {
   private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
   private httpClient = inject(HttpClient);
 
-  getPosts() {
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;
+
     this.httpClient
-      .get<{ message: string; posts: any }>(`${env.BASE_URL}/posts`)
+      .get<{ message: string; posts: any; maxPost: number }>(
+        `${env.BASE_URL}/posts${queryParams}`
+      )
       .pipe(
         map((postData) => {
-          return postData.posts.map((post: any) => {
-            return {
-              title: post.title,
-              content: post.content,
-              id: post._id,
-              imagePath: post.imagePath,
-            };
-          });
+          return {
+            posts: postData.posts.map((post: any) => {
+              return {
+                title: post.title,
+                content: post.content,
+                id: post._id,
+                imagePath: post.imagePath,
+              };
+            }),
+            maxPosts: postData.maxPost,
+          };
         })
       )
-      .subscribe((posts) => {
-        this.posts = posts;
-        this.postsUpdated.next([...this.posts]);
+      .subscribe((postsData) => {
+        this.posts = postsData.posts;
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: postsData.maxPosts,
+        });
       });
   }
 
@@ -76,10 +86,6 @@ export class PostsService {
   }
 
   deletePost(postId: string) {
-    this.httpClient.delete(`${env.BASE_URL}/posts/${postId}`).subscribe(() => {
-      const updatedPosts = this.posts.filter((post) => post.id !== postId);
-      this.posts = updatedPosts;
-      this.postsUpdated.next([...this.posts]);
-    });
+    return this.httpClient.delete(`${env.BASE_URL}/posts/${postId}`);
   }
 }

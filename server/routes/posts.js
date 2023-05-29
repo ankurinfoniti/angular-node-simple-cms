@@ -40,10 +40,12 @@ router.get("", async (req, res) => {
   }
 
   const posts = await postQuery;
+  const totalPost = await Post.count();
 
   res.json({
     message: "Posts fetched successfully!",
     posts: posts,
+    maxPost: totalPost,
   });
 });
 
