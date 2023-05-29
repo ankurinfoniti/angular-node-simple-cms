@@ -13,12 +13,18 @@ router.post("/signup", async (req, res, next) => {
     password: hash,
   });
 
-  const result = await user.save();
+  try {
+    const result = await user.save();
 
-  res.status(201).json({
-    message: "User created successfully",
-    result: result,
-  });
+    res.status(201).json({
+      message: "User created successfully",
+      result: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error,
+    });
+  }
 });
 
 module.exports = router;

@@ -16,7 +16,7 @@ app.use(express.urlencoded());
 app.use(express.static("public"));
 
 app.use("/api/posts", postsRoutes);
-app.use("api/user", userRoutes);
+app.use("/api/user", userRoutes);
 
 app.listen(port, () => {
   console.log(`server is listening on port ${port}`);
