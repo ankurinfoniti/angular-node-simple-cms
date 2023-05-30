@@ -52,6 +52,7 @@ router.post("/login", async (req, res, next) => {
   res.json({
     token: token,
     expiresIn: 3600,
+    userId: user._id,
   });
 });
 
