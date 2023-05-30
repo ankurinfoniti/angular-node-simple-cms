@@ -4,15 +4,18 @@ import { Subject } from 'rxjs';
 
 import { environment as env } from 'src/environments/environment';
 import { Auth } from './auth-model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private isAuthenticated = false;
-  private token = '';
+  private token: string | null = null;
   private authStatusListener = new Subject<boolean>();
+
   private httpClient = inject(HttpClient);
+  private router = inject(Router);
 
   getToken() {
     return this.token;
@@ -44,7 +47,14 @@ export class AuthService {
           this.token = response.token;
           this.isAuthenticated = true;
           this.authStatusListener.next(true);
+          this.router.navigate(['/']);
         }
       });
+  }
+
+  logout() {
+    this.token = null;
+    this.isAuthenticated = false;
+    this.authStatusListener.next(false);
   }
 }
