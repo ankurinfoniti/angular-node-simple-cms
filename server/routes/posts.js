@@ -65,6 +65,7 @@ router.post(
       title: req.body.title,
       content: req.body.content,
       imagePath: "images/" + req.file.filename,
+      createdBy: req.userData.userId,
     });
 
     await post.save();

@@ -29,6 +29,7 @@ export class PostsService {
                 content: post.content,
                 id: post._id,
                 imagePath: post.imagePath,
+                createdBy: post.createdBy,
               };
             }),
             maxPosts: postData.maxPost,
