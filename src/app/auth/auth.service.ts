@@ -18,4 +18,13 @@ export class AuthService {
         console.log(response);
       });
   }
+
+  login(email: string, password: string) {
+    const authData: Auth = { email: email, password: password };
+    this.httpClient
+      .post(`${env.BASE_URL}/user/login`, authData)
+      .subscribe((response) => {
+        console.log(response);
+      });
+  }
 }
