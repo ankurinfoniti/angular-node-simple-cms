@@ -9,12 +9,17 @@ import { Auth } from './auth-model';
   providedIn: 'root',
 })
 export class AuthService {
+  private isAuthenticated = false;
   private token = '';
   private authStatusListener = new Subject<boolean>();
   private httpClient = inject(HttpClient);
 
   getToken() {
     return this.token;
+  }
+
+  getIsAuth() {
+    return this.isAuthenticated;
   }
 
   getAuthStatusListener() {
@@ -35,8 +40,11 @@ export class AuthService {
     this.httpClient
       .post<{ token: string }>(`${env.BASE_URL}/user/login`, authData)
       .subscribe((response) => {
-        this.token = response.token;
-        this.authStatusListener.next(true);
+        if (response.token) {
+          this.token = response.token;
+          this.isAuthenticated = true;
+          this.authStatusListener.next(true);
+        }
       });
   }
 }
