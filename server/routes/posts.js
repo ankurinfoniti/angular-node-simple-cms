@@ -84,21 +84,34 @@ router.put(
       imagePath = "images/" + req.file.filename;
     }
 
-    await Post.findOneAndUpdate(
-      { _id: req.params.id },
+    const result = await Post.findOneAndUpdate(
+      { _id: req.params.id, createdBy: req.userData.userId },
       {
         title: req.body.title,
         content: req.body.content,
         imagePath: imagePath,
       }
     );
-    res.json({ message: "Update successfully!" });
+
+    if (result) {
+      return res.json({ message: "Update successfully!" });
+    } else {
+      return res.status(401).json({ message: "Not authorized!" });
+    }
   }
 );
 
 router.delete("/:id", checkAuth, async (req, res, next) => {
-  await Post.deleteOne({ _id: req.params.id });
-  res.json({ message: "Post deleted!" });
+  const result = await Post.deleteOne({
+    _id: req.params.id,
+    createdBy: req.userData.userId,
+  });
+
+  if (result.deletedCount) {
+    return res.json({ message: "Post deleted!" });
+  } else {
+    return res.status(401).json({ message: "Not authorized!" });
+  }
 });
 
 module.exports = router;
